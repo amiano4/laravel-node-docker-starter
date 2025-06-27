@@ -158,4 +158,4 @@ A: Run `make reset` (removes containers and named volumes), then `make up` to re
 
 ## Credits
 
-- I'm just learning docker.
+- My progress while learning docker-based development
