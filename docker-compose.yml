@@ -27,7 +27,7 @@ services:
       - ./app/backend:/var/www
       - ./docker/php/custom.ini:/usr/local/etc/php/conf.d/custom.ini
     environment:
-      - APP_ENV=local
+      - APP_ENV=local # Can be used to determine the environment the app is running in
     depends_on:
       - mysql
       - redis
@@ -48,7 +48,7 @@ services:
     ports:
       - "${FRONTEND_PORT:-443}:5173"
     environment:
-      ENV_USE_HTTPS: ${USE_HTTPS} # Pass this to node app
+      ENV_USE_HTTPS: ${USE_HTTPS} # This is used to determine if the app should use HTTPS
     networks:
       - appnet
 
@@ -102,7 +102,6 @@ services:
 
 volumes:
   db_data:
-  pnpm_store:
 
 networks:
   appnet:
