@@ -36,8 +36,6 @@ docker-compose.yml  # Main Docker Compose file
 - **Mailhog**: Local email testing
 - **PhpMyAdmin**: MySQL web UI
 
----
-
 ## Setup Instructions
 
 ### 1. Clone the Repository
@@ -94,8 +92,6 @@ make up
 
   🔗 Mailhog: http://localhost:8025
 
----
-
 ## Usage & Common Commands
 
 - `make up` — Start all containers (build if needed)
@@ -107,8 +103,6 @@ make up
 - `make shell-node` — Shell into the Node container
 - `make shell-mysql` — Shell into the MySQL container
 - `make shell-redis` — Shell into the Redis container
-
----
 
 ## Troubleshooting
 
@@ -144,16 +138,12 @@ make up
 - **Frontend not hot-reloading**: Make sure your source code is mounted and Vite is running in dev mode.
 - **Database connection errors**: Check MySQL credentials in `.env` and ensure the `mysql` service is healthy.
 
----
-
 ## Customization & Extending
 
 - **PHP Extensions**: Add more extensions in `docker/php/Dockerfile` as needed.
 - **MySQL Config**: Place overrides in `docker/mysql/my.cnf`.
 - **pnpm Cache**: The pnpm cache is persisted using a volume mapped to `docker/node/.pnpm_store` for faster dependency installs.
 - **Redis Data**: Redis data is persisted in `docker/redis/data` (make sure this directory exists or is created by Docker).
-
----
 
 ## FAQ
 
@@ -165,8 +155,6 @@ A: Add them to `docker-compose.yml` and create any needed config in `docker/`.
 
 **Q: How do I reset the database or cache?**
 A: Run `make reset` (removes containers and named volumes), then `make up` to recreate.
-
----
 
 ## Credits
 
