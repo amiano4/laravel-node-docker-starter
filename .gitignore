@@ -1,0 +1,34 @@
+# Project files
+app/*
+!app/.gitkeep
+
+# Environment
+.env.*
+
+# Docker
+certs/*
+!certs/.gitkeep
+db_data/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# IDEs
+.vscode/
+.idea/
+
+# Misc
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log* 
+
+# Node
+docker/node/.pnpm_store/*
+
+# Redis
+docker/redis/data/*

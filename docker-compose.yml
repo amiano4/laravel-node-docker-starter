@@ -1,0 +1,109 @@
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile
+    container_name: nginx
+    ports:
+      - "${NGINX_PORT:-8000}:80"
+      - "${NGINX_SSL_PORT:-8443}:443"
+    environment:
+      - USE_HTTPS=${USE_HTTPS}
+    volumes:
+      - ./app/backend:/var/www
+      - ./docker/nginx/templates:/etc/nginx/templates
+      - ./certs:/etc/nginx/certs
+    depends_on:
+      - php
+    networks:
+      - appnet
+
+  php:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: php
+    volumes:
+      - ./app/backend:/var/www
+      - ./docker/php/custom.ini:/usr/local/etc/php/conf.d/custom.ini
+    environment:
+      - APP_ENV=local
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - appnet
+
+  node_app:
+    build:
+      context: .
+      dockerfile: docker/node/Dockerfile
+    container_name: node_app
+    working_dir: /app
+    volumes:
+      - ./app/frontend:/app
+      - ./certs:/certs
+      - ./docker/node/.pnpm_store:/root/.pnpm-store
+      - ./docker/node/.npmrc:/root/.npmrc
+    ports:
+      - "${FRONTEND_PORT:-443}:5173"
+    environment:
+      ENV_USE_HTTPS: ${USE_HTTPS} # Pass this to node app
+    networks:
+      - appnet
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    ports:
+      - "${MYSQL_PORT:-3306}:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-app}
+      MYSQL_USER: ${MYSQL_USER:-app}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-secret}
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
+    networks:
+      - appnet
+
+  redis:
+    image: redis:7
+    container_name: redis
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - ./docker/redis/data:/data
+    networks:
+      - appnet
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: mailhog
+    ports:
+      - "${MAILHOG_PORT:-8025}:8025"
+    networks:
+      - appnet
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: ${MYSQL_USER:-app}
+      PMA_PASSWORD: ${MYSQL_PASSWORD:-secret}
+    ports:
+      - "${PHPMYADMIN_PORT:-8080}:80"
+    depends_on:
+      - mysql
+    networks:
+      - appnet
+
+volumes:
+  db_data:
+  pnpm_store:
+
+networks:
+  appnet:
+    driver: bridge
