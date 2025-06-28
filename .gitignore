@@ -32,3 +32,6 @@ docker/node/.pnpm_store/*
 
 # Redis
 docker/redis/data/*
+
+# workspace files
+*.*-workspace
